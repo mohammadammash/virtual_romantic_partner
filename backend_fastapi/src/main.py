@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 #internal:
 from .config.main import settings
+from .features.user.main import router as user_router
 
 app = FastAPI()
 
@@ -14,3 +15,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.include_router(user_router)
