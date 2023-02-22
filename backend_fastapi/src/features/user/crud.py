@@ -11,12 +11,11 @@ async def get_all_users() -> List[UserModel]:
     return users
 
 
-
 async def post_signup_user(data: NewUserModel) -> UserModel:
     user = jsonable_encoder(data)
     new_user = await UsersCollection.insert_one(user)
     created_user = await UsersCollection.find_one({"_id": new_user.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
+    return created_user
 
 
 
