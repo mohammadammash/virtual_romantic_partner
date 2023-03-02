@@ -6,12 +6,9 @@ from ...models.user import NewUserModel, UserModel
 from ...models.message import MessageModel, NewMessageModel
 
 router = APIRouter(
+    prefix="/user"
     # dependencies=[Depends(verify_authentication)]
 )
-
-@router.get("/", response_description="All Users", response_model=List[UserModel])
-async def get_all_users():
-    return await crud.get_all_users()
 
 @router.get("/{user_id}/{offset}", response_description="Get Paginated 10 Messages", response_model=List[MessageModel])
 async def get_messages(user_id: str, offset: int):
@@ -21,7 +18,7 @@ async def get_messages(user_id: str, offset: int):
 async def send_message(new_message: NewMessageModel):
     return await crud.post_send_message(data=new_message)
 
-@router.post("/", response_description="User Sign Up", response_model=UserModel)
+@router.post("/signup", response_description="User Sign Up", response_model=UserModel)
 async def signup_user(data: NewUserModel):
     return await crud.post_signup_user(data=data)
 

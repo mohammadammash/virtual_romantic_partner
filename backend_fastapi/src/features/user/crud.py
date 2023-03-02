@@ -5,11 +5,6 @@ from ...config.database import UsersCollection
 from ...models.user import UserModel, NewUserModel
 from ...models.message import MessageModel, NewMessageModel
 
-async def get_all_users() -> List[UserModel]:
-    users = await UsersCollection.find().to_list(1000)
-    return users
-
-
 async def post_signup_user(data: NewUserModel) -> UserModel:
     user = jsonable_encoder(data)
     new_user = await UsersCollection.insert_one(user)
