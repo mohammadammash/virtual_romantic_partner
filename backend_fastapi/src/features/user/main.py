@@ -6,6 +6,7 @@ from ...models.user import NewUserModel, UserModel
 from ...models.message import MessageModel, NewMessageModel
 
 router = APIRouter(
+    prefix="/user"
     # dependencies=[Depends(verify_authentication)]
 )
 
