@@ -1,4 +1,5 @@
 from typing import List
+from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 # internal:
 from ...config.database import UsersCollection
@@ -6,6 +7,11 @@ from ...models.user import UserModel, NewUserModel
 from ...models.message import MessageModel, NewMessageModel
 
 async def post_signup_user(data: NewUserModel) -> UserModel:
+    # Check if user with this email already exists
+    existing_user = await UsersCollection.find_one({"email": data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already exists")
+    
     user = jsonable_encoder(data)
     new_user = await UsersCollection.insert_one(user)
     created_user = await UsersCollection.find_one({"_id": new_user.inserted_id})
