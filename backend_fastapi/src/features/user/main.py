@@ -17,7 +17,7 @@ async def get_messages(user_id: str, offset: int):
 async def send_message(new_message: NewMessageModel):
     return await crud.post_send_message(data=new_message)
 
-@router.post("/", response_description="User Sign Up", response_model=UserModel)
+@router.post("/signup", response_description="User Sign Up", response_model=UserModel)
 async def signup_user(data: NewUserModel):
     return await crud.post_signup_user(data=data)
 

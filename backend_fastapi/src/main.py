@@ -4,6 +4,7 @@ import os
 #internal:
 from .config.main import settings
 from .features.user.main import router as user_router
+from .features.admin.main import router as admin_router
 
 app = FastAPI()
 
@@ -17,3 +18,4 @@ app.add_middleware(
 )
 
 app.include_router(user_router)
+app.include_router(admin_router)

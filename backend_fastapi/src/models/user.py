@@ -17,6 +17,7 @@ class UserModel(BaseModel):
     dob: date
     profile_url: Optional[str] = None
     chat: Optional[List[MessageModel]] = []
+    user_type: str = Field(...)
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
@@ -30,6 +31,7 @@ class UserModel(BaseModel):
                 "dob": "2023-02-22",
                 "profile_url": "/public/images/ahmad@gmail.com24532432",
                 "chat": "[]",
+                "user_type": "user"
             }
         }
 
@@ -41,6 +43,7 @@ class NewUserModel(BaseModel):
     partner_gender: str = Field(..., enum=['male', 'female', 'other'])
     dob: date
     profile_base64: Optional[str] = None
+    user_type: str = Field(...)
     
     class Config:
         arbitrary_types_allowed = True
@@ -54,6 +57,7 @@ class NewUserModel(BaseModel):
                 "partner_gender": "male",
                 "dob": "2023-02-18",
                 "profile_base64": "GSFDKGSID#$#@#LFDSFD",
+                "user_type": "user"
             }
         }
 
