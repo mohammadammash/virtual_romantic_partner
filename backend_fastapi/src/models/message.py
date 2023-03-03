@@ -29,9 +29,10 @@ class MessageModel(BaseModel):
         
 class NewMessageModel(BaseModel):
     text: str = Field(..., min_length=1)
-    is_author: bool
+    is_author: Optional[bool] = True
     image_base64: Optional[str] = None
     voice_data: Optional[str] = None
+    created_at: Optional[datetime] = Field(default_factory=datetime.now)
 
     class Config:
         arbitrary_types_allowed = True

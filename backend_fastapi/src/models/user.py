@@ -62,3 +62,32 @@ class NewUserModel(BaseModel):
         }
 
 
+class LoginUserModel(BaseModel):
+    email: str = Field(..., regex=r'^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$')
+    password: str = Field(..., min_length=6)
+    
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "email": "jdoe@example.com",
+                "password": "123PleaseDontUseMe"
+            }
+        }
+        
+class UpdateUserModel(BaseModel):
+    name: Optional[str] = Field(min_length=1)
+    partner_gender: Optional[str] = Field(..., enum=['male', 'female', 'other'])
+    profile_url: Optional[str] = None
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Jane Doe",
+                "partner_gender": "male",
+                "profile_url": "/public/images/jane_doe.png",
+            }
+        }
