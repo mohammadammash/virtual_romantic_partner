@@ -75,3 +75,19 @@ class LoginUserModel(BaseModel):
                 "password": "123PleaseDontUseMe"
             }
         }
+        
+class UpdateUserModel(BaseModel):
+    name: Optional[str] = Field(min_length=1)
+    partner_gender: Optional[str] = Field(..., enum=['male', 'female', 'other'])
+    profile_url: Optional[str] = None
+
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "name": "Jane Doe",
+                "partner_gender": "male",
+                "profile_url": "/public/images/jane_doe.png",
+            }
+        }
