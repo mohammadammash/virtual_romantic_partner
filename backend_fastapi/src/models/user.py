@@ -62,3 +62,16 @@ class NewUserModel(BaseModel):
         }
 
 
+class LoginUserModel(BaseModel):
+    email: str = Field(..., regex=r'^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$')
+    password: str = Field(..., min_length=6)
+    
+    class Config:
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "email": "jdoe@example.com",
+                "password": "123PleaseDontUseMe"
+            }
+        }

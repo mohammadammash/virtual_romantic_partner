@@ -2,6 +2,7 @@ from typing import List
 from fastapi import HTTPException
 from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
+from passlib.context import CryptContext
 # internal:
 from ...config.database import UsersCollection
 from ...models.user import UserModel, NewUserModel
@@ -12,6 +13,9 @@ async def post_signup_user(data: NewUserModel) -> UserModel:
     existing_user = await UsersCollection.find_one({"email": data.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already exists")
+    
+    pwd_context = CryptContext(schemes=["bcrypt"],deprecated="auto")
+    data.password = pwd_context.hash(data.password)
     
     user = jsonable_encoder(data)
     new_user = await UsersCollection.insert_one(user)
