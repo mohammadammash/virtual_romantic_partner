@@ -20,7 +20,7 @@ async def post_signup_user(data: NewUserModel) -> UserModel:
 
 
 async def get_paginated_messages(user_id: str, offset: int) -> List[MessageModel]:
-    user = await UsersCollection.find_one({"_id": user_id})
+    user = await UsersCollection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
