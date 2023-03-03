@@ -10,9 +10,9 @@ router = APIRouter(
     # dependencies=[Depends(verify_authentication)]
 )
 
-@router.get("/{user_id}/{offset}", response_description="Get Paginated 10 Messages", response_model=List[MessageModel])
-async def get_messages(user_id: str, offset: int):
-    return await crud.get_paginated_messages(user_id=user_id,offset=offset)
+@router.get("/{offset}", response_description="Get Paginated 10 Messages", response_model=List[MessageModel])
+async def get_messages(offset: int):
+    return await crud.get_paginated_messages(offset=offset)
 
 @router.post("/chat", response_description="Send Message", response_model=MessageModel)
 async def send_message(new_message: NewMessageModel):
