@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 # internal:
 from . import crud
 from ...models.user import LoginUserModel, UserModel, UpdateUserModel
+from ...dependencies.auth import verify_authentication
+
 
 router = APIRouter(
-    # dependencies=[Depends(verify_authentication)]
+    dependencies=[Depends(verify_authentication)]
 )
 
 @router.post("/login", response_description="Login User", response_model=UserModel)

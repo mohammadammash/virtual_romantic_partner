@@ -1,13 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from typing import List
 # internal:
 from . import crud
 from ...models.user import UserModel
 from ...models.message import MessageModel
+from ...dependencies.auth import verify_authentication
 
 router = APIRouter(
     prefix="/admin",
-    # dependencies=[Depends(verify_authentication)]
+    dependencies=[Depends(verify_authentication)]
 )
 
 @router.get("/users", response_description="All Users", response_model=List[UserModel])

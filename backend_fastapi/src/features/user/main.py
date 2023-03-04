@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from typing import List
 # internal:
 from . import crud
 from ...models.user import NewUserModel, UserModel
 from ...models.message import MessageModel, NewMessageModel
+from ...dependencies.auth import verify_authentication
 
 router = APIRouter(
-    prefix="/user"
-    # dependencies=[Depends(verify_authentication)]
+    prefix="/user",
+    dependencies=[Depends(verify_authentication)]
 )
 
 @router.get("/{offset}", response_description="Get Paginated 10 Messages", response_model=List[MessageModel])
