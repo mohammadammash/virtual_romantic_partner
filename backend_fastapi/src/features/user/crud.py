@@ -8,11 +8,12 @@ from ...models.message import MessageModel, NewMessageModel
 from ..helpers.get_paginated_messages import get_paginated_messages_helper
 
 
-async def get_paginated_messages( offset: int) -> List[MessageModel]:
-    return await get_paginated_messages_helper(user_id="64005e70cf5c276361cf0ee1",offset=offset)
+async def get_paginated_messages( offset: int, user_id: str) -> List[MessageModel]:
+    return await get_paginated_messages_helper(user_id=user_id,offset=offset)
 
-async def post_send_message(data: NewMessageModel)->MessageModel:
-    user = await UsersCollection.find_one({"_id": ObjectId("64005e70cf5c276361cf0ee1")})
+
+async def post_send_message(data: NewMessageModel, user_id: str)->MessageModel:
+    user = await UsersCollection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
