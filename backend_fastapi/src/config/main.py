@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     SERVER_PORT: str
     SERVER_ENV: str
     JWT_SECRET_KEY: str
+    PROFILE_IMAGE_DIR: str
 
     class Config:
         env_file = ".env"

@@ -79,7 +79,7 @@ class LoginUserModel(BaseModel):
 class UpdateUserModel(BaseModel):
     name: Optional[str] = Field(min_length=1)
     partner_gender: Optional[str] = Field(..., enum=['male', 'female', 'other'])
-    profile_url: Optional[str] = None
+    profile_base64: Optional[str] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -88,6 +88,6 @@ class UpdateUserModel(BaseModel):
             "example": {
                 "name": "Jane Doe",
                 "partner_gender": "male",
-                "profile_url": "/public/images/jane_doe.png",
+                "profile_base64": "DISADSASA$#@#",
             }
         }

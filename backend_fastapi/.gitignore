@@ -20,6 +20,7 @@ docs_build
 venv
 docs.zip
 archive.zip
+profile_images
 
 # vim temporary files
 *~
