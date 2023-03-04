@@ -8,8 +8,8 @@ from ...models.user import UserModel, UpdateUserModel
 
 
 
-async def put_edit_profile(data: UpdateUserModel) -> UserModel:
-    user = await UsersCollection.find_one({"_id": ObjectId("64005e70cf5c276361cf0ee1")})
+async def put_edit_profile(data: UpdateUserModel, user_id: str) -> UserModel:
+    user = await UsersCollection.find_one({"_id": ObjectId(user_id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     

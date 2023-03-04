@@ -11,5 +11,5 @@ router = APIRouter(
 )
 
 @router.put("/profile", response_description="Edit Profile", response_model=UserModel)
-async def put_edit_profile(data: UpdateUserModel):
-    return await crud.put_edit_profile(data=data)
+async def put_edit_profile(data: UpdateUserModel, payload=(Depends(verify_authentication))):
+    return await crud.put_edit_profile(data=data, user_id=payload["user_id"])
