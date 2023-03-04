@@ -4,20 +4,8 @@ from passlib.context import CryptContext
 from pymongo.collection import ReturnDocument
 # internal:
 from ...config.database import UsersCollection
-from ...models.user import UserModel, LoginUserModel, UpdateUserModel
+from ...models.user import UserModel, UpdateUserModel
 
-
-async def post_login_user(data: LoginUserModel) -> UserModel:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    
-    user = await UsersCollection.find_one({"email": data.email})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    if not pwd_context.verify(data.password, user["password"]):
-        raise HTTPException(status_code=401, detail="Incorrect email or password")
-    
-    return UserModel(**user)
 
 
 async def put_edit_profile(data: UpdateUserModel) -> UserModel:
