@@ -1,8 +1,4 @@
-import base64
 from datetime import datetime, timedelta
-import imghdr
-import os
-import uuid
 from fastapi import HTTPException
 import jwt
 from passlib.context import CryptContext
@@ -12,6 +8,7 @@ from bson import ObjectId
 from ...config.database import UsersCollection
 from ...config.main import settings
 from ...models.user import UserModel, LoginUserModel, NewUserModel
+from ..helpers.base64_image_upload import save_profile_image
 
 
 async def post_login_user(data: LoginUserModel):
@@ -47,22 +44,7 @@ async def post_signup_user(data: NewUserModel):
     
     # Decode the profile_base64 string to bytes and save it as an image file
     user_id = ObjectId()
-    if data.profile_base64:
-        profile_bytes = base64.b64decode(data.profile_base64)
-        extension = imghdr.what(None, h=profile_bytes)
-        if extension:
-            filename = f"{uuid.uuid4()}.{extension}"
-            filepath =os.path.join(settings.PROFILE_IMAGE_DIR, str(user_id))
-            os.makedirs(filepath, exist_ok=True)
-            
-            with open(os.path.join(filepath, filename), "wb") as f:
-                f.write(profile_bytes)
-            # Set the profile_url field to the URL of the saved image file
-            profile_url = f"{filepath}\{filename}"
-            
-        else:
-            # If the profile_base64 string is not a valid image, raise an exception
-            raise HTTPException(status_code=400, detail="Invalid profile image")
+    profile_url = await save_profile_image(data, user_id)
 
     # Remove the profile_base64 field from the data dictionary
     updated_data = data.dict(exclude={"profile_base64"})

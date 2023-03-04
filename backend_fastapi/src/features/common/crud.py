@@ -1,16 +1,11 @@
-import base64
-import imghdr
-import os
-import uuid
 from bson import ObjectId
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from pymongo.collection import ReturnDocument
 # internal:
 from ...config.database import UsersCollection
-from ...config.main import settings
 from ...models.user import UserModel, UpdateUserModel
-
+from ..helpers.base64_image_upload import save_profile_image
 
 
 async def put_edit_profile(data: UpdateUserModel, user_id: str) -> UserModel:
@@ -18,22 +13,7 @@ async def put_edit_profile(data: UpdateUserModel, user_id: str) -> UserModel:
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    if data.profile_base64:
-        profile_bytes = base64.b64decode(data.profile_base64)
-        extension = imghdr.what(None, h=profile_bytes)
-        if extension:
-            filename = f"{uuid.uuid4()}.{extension}"
-            filepath =os.path.join(settings.PROFILE_IMAGE_DIR, str(user_id))
-            os.makedirs(filepath, exist_ok=True)
-            
-            with open(os.path.join(filepath, filename), "wb") as f:
-                f.write(profile_bytes)
-            # Set the profile_url field to the URL of the saved image file
-            profile_url = f"{filepath}\{filename}"
-            
-        else:
-            # If the profile_base64 string is not a valid image, raise an exception
-            raise HTTPException(status_code=400, detail="Invalid profile image")
+    profile_url = await save_profile_image(data, user_id)
 
     updated_data = data.dict(exclude_unset=True) 
     updated_data = data.dict(exclude={"profile_base64"})
