@@ -4,11 +4,11 @@ from typing import List
 from . import crud
 from ...models.user import UserModel
 from ...models.message import MessageModel
-from ...dependencies.auth import verify_authentication
+from ...dependencies.check_if_admin import check_if_admin
 
 router = APIRouter(
     prefix="/admin",
-    dependencies=[Depends(verify_authentication)]
+    dependencies=[Depends(check_if_admin)]
 )
 
 @router.get("/users", response_description="All Users", response_model=List[UserModel])
