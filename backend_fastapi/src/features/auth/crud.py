@@ -1,9 +1,13 @@
+import base64
 from datetime import datetime, timedelta
+import imghdr
+import os
+import uuid
 from fastapi import HTTPException
 import jwt
 from passlib.context import CryptContext
 from fastapi.encoders import jsonable_encoder
-from passlib.context import CryptContext
+from bson import ObjectId
 # internal:
 from ...config.database import UsersCollection
 from ...config.main import settings
@@ -41,7 +45,31 @@ async def post_signup_user(data: NewUserModel):
     unhashed_password = data.password
     data.password = pwd_context.hash(data.password)
     
-    user = jsonable_encoder(data)
+    # Decode the profile_base64 string to bytes and save it as an image file
+    user_id = ObjectId()
+    if data.profile_base64:
+        profile_bytes = base64.b64decode(data.profile_base64)
+        extension = imghdr.what(None, h=profile_bytes)
+        if extension:
+            filename = f"{uuid.uuid4()}.{extension}"
+            filepath =os.path.join(settings.PROFILE_IMAGE_DIR, str(user_id))
+            os.makedirs(filepath, exist_ok=True)
+            
+            with open(os.path.join(filepath, filename), "wb") as f:
+                f.write(profile_bytes)
+            # Set the profile_url field to the URL of the saved image file
+            profile_url = f"{filepath}\{filename}"
+            
+        else:
+            # If the profile_base64 string is not a valid image, raise an exception
+            raise HTTPException(status_code=400, detail="Invalid profile image")
+
+    # Remove the profile_base64 field from the data dictionary
+    updated_data = data.dict(exclude={"profile_base64"})
+    
+    user = jsonable_encoder(updated_data)
+    user["profile_url"]=profile_url
+    user["_id"]=user_id
     await UsersCollection.insert_one(user)
     
     # Call post_login_user to generate a JWT token and return it with new user data
